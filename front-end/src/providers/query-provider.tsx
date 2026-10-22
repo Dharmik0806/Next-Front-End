@@ -3,7 +3,6 @@
 import {
   QueryClient,
   QueryClientProvider,
-  isServer,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactNode } from "react";
@@ -27,7 +26,7 @@ function makeQueryClient() {
 let browserQueryClient: QueryClient | undefined = undefined;
 
 function getQueryClient() {
-  if (isServer) {
+  if (typeof window === "undefined") {
     // Server: always create a new client
     return makeQueryClient();
   } else {

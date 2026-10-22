@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { Lock, Mail, ArrowRight, Loader2, ShieldCheck } from "lucide-react";
+import { Lock, ArrowRight, Loader2 } from "lucide-react";
 import AppInput from "@/app/components/common/form/app-input/app-input";
 import AppPassword from "@/app/components/common/form/app-password/app-password";
 import AppCheckbox from "@/app/components/common/form/app-checkbox/app-checkbox";
@@ -12,7 +11,7 @@ import { useLoginMutation } from "@/hooks/api/use-auth";
 import { ILoginFormInput } from "./login.type";
 
 const Login = () => {
-    const { mutate: login, isPending } = useLoginMutation();
+    const { mutateAsync: login, isPending } = useLoginMutation();
 
     const methods = useForm<ILoginFormInput>({
         defaultValues: {
@@ -27,21 +26,22 @@ const Login = () => {
         handleSubmit,
         formState: { isSubmitting },
     } = methods;
-    // console.log("🚀 ~ Login ~ isSubmitting:", isSubmitting)
-    // console.log("🚀 ~ Login ~ isSubmitting:", isSubmitting)
-    // console.log("🚀 ~ Login ~ isSubmitting:", isSubmitting)
-    // console.log("🚀 ~ Login ~ isSubmitting:", isSubmitting)
-    // console.log("🚀 ~ Login ~ isSubmitting:", isSubmitting)
-
-
-
     const isLoading = isSubmitting || isPending;
 
-    const onSubmit: SubmitHandler<ILoginFormInput> = (data) => {
-        login({
-            email: data.email,
-            password: data.password,
-        });
+    const onSubmit: SubmitHandler<ILoginFormInput> = async (data) => {
+        try {
+            const result = await login({
+                email: data.email,
+                password: data.password,
+            });
+
+            console.log("Login result:", result);
+            if (result?.success) {
+                console.log("Login success : i can perform some operation", result);
+            }
+        } catch (error) {
+            console.error("Login submission error:", error);
+        }
     };
 
     return (

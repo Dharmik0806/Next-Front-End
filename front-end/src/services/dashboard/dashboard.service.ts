@@ -11,8 +11,9 @@ export const dashboardService = {
    * GET /dashboard/stats
    */
   getStats: async (): Promise<IDashboardStats> => {
-    const response = await apiClient.get<IDashboardStats>("/dashboard/stats");
-    return response.data;
+    const response = await apiClient.get<IDashboardStats | { data: IDashboardStats }>("/dashboard/stats");
+    const result = response.data as { data?: IDashboardStats };
+    return result?.data ?? (response.data as IDashboardStats);
   },
 
   /**
@@ -20,8 +21,9 @@ export const dashboardService = {
    * GET /dashboard/activities
    */
   getActivities: async (): Promise<IActivityItem[]> => {
-    const response = await apiClient.get<IActivityItem[]>("/dashboard/activities");
-    return response.data;
+    const response = await apiClient.get<IActivityItem[] | { data: IActivityItem[] }>("/dashboard/activities");
+    const result = response.data as { data?: IActivityItem[] };
+    return result?.data ?? (response.data as IActivityItem[]);
   },
 
   /**
@@ -29,8 +31,9 @@ export const dashboardService = {
    * GET /dashboard/profile
    */
   getProfile: async (): Promise<IUserProfile> => {
-    const response = await apiClient.get<IUserProfile>("/dashboard/profile");
-    return response.data;
+    const response = await apiClient.get<IUserProfile | { data: IUserProfile }>("/dashboard/profile");
+    const result = response.data as { data?: IUserProfile };
+    return result?.data ?? (response.data as IUserProfile);
   },
 };
 

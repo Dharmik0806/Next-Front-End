@@ -26,11 +26,10 @@ const Register = () => {
 
     const {
         handleSubmit,
-        watch,
+        getValues,
         formState: { isSubmitting },
     } = methods;
 
-    const passwordValue = watch("password");
     const isLoading = isSubmitting || isPending;
 
     const onSubmit: SubmitHandler<IRegisterFormInput> = (data) => {
@@ -130,7 +129,7 @@ const Register = () => {
                             rules={{
                                 required: "Please confirm your password",
                                 validate: (value: string) =>
-                                    value === passwordValue || "Passwords do not match",
+                                    value === getValues("password") || "Passwords do not match",
                             }}
                         />
 

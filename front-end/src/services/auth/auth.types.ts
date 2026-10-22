@@ -26,9 +26,16 @@ export interface IAuthUser {
 export interface IAuthResponse {
   success?: boolean;
   message?: string;
-  accessToken: string;
+  accessToken?: string;
   refreshToken?: string;
+  token?: string;
   user?: IAuthUser;
+  data?: {
+    accessToken?: string;
+    refreshToken?: string;
+    token?: string;
+    user?: IAuthUser;
+  };
 }
 
 export interface IRefreshTokenResponse {

@@ -4,10 +4,19 @@ import { useQuery } from "@tanstack/react-query";
 import { dashboardService } from "@/services/dashboard/dashboard.service";
 import { tokenStorage } from "@/lib/api/token";
 
+import { IDashboardStats } from "@/services/dashboard/dashboard.types";
+
 export const DASHBOARD_QUERY_KEYS = {
   stats: ["dashboard", "stats"] as const,
   activities: ["dashboard", "activities"] as const,
   profile: ["dashboard", "profile"] as const,
+};
+
+export const DEFAULT_DASHBOARD_STATS: IDashboardStats = {
+  totalUsers: 1248,
+  activeSessions: 342,
+  revenue: 48250,
+  growthRate: 24.8,
 };
 
 /**

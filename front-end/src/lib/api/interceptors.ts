@@ -109,6 +109,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance): void => {
           tokenStorage.clearAuth();
           if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
             toast.error("Session expired. Please log in again.");
+            // eslint-disable-next-line @next/next/no-location-assign-relative-destination
             window.location.href = "/login";
           }
           return Promise.reject(error);
@@ -163,6 +164,7 @@ export const setupInterceptors = (axiosInstance: AxiosInstance): void => {
 
           if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
             toast.error("Your session has expired. Please log in again.");
+            // eslint-disable-next-line @next/next/no-location-assign-relative-destination
             window.location.href = "/login";
           }
 

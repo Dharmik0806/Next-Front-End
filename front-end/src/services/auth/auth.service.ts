@@ -17,7 +17,7 @@ export const authService = {
    * POST /register
    */
   register: async (payload: IRegisterPayload): Promise<IAuthResponse> => {
-    const response = await apiClient.post<IAuthResponse>("/register", payload);
+    const response = await apiClient.post<IAuthResponse>("auth/register", payload);
     return response.data;
   },
 
@@ -26,7 +26,7 @@ export const authService = {
    * POST /login
    */
   login: async (payload: ILoginPayload): Promise<IAuthResponse> => {
-    const response = await apiClient.post<IAuthResponse>("/login", payload);
+    const response = await apiClient.post<IAuthResponse>("auth/login", payload);
     return response.data;
   },
 
@@ -35,7 +35,7 @@ export const authService = {
    * POST /refresh-token
    */
   refreshToken: async (refreshToken: string): Promise<IRefreshTokenResponse> => {
-    const response = await apiClient.post<IRefreshTokenResponse>("/refresh-token", {
+    const response = await apiClient.post<IRefreshTokenResponse>("auth/refresh-token", {
       refreshToken,
     });
     return response.data;
@@ -46,7 +46,7 @@ export const authService = {
    * GET /auth/me
    */
   getCurrentUser: async (): Promise<IAuthUser> => {
-    const response = await apiClient.get<IAuthUser>("/auth/me");
+    const response = await apiClient.get<IAuthUser>("auth/me");
     return response.data;
   },
 
@@ -56,7 +56,7 @@ export const authService = {
    */
   logout: async (): Promise<void> => {
     try {
-      await apiClient.post("/logout", {}, { skipToast: true });
+      await apiClient.post("auth/logout", {}, { skipToast: true });
     } catch {
       // Ignore network/server errors during logout
     } finally {

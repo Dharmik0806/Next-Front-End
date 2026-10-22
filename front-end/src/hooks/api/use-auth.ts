@@ -25,25 +25,52 @@ export const useLoginMutation = () => {
   return useMutation({
     mutationFn: (payload: ILoginPayload) => authService.login(payload),
     onSuccess: (data: IAuthResponse) => {
-      // Persist session tokens
-      if (data.accessToken) {
-        tokenStorage.setTokens(data.accessToken, data.refreshToken);
+      // Robust extraction supporting standard & nested response shapes
+      const accessToken =
+        data.accessToken ||
+        data.data?.accessToken ||
+        data.token ||
+        data.data?.token;
+
+      const refreshToken =
+        data.refreshToken ||
+        data.data?.refreshToken;
+
+      const user =
+        data.user ||
+        data.data?.user;
+
+      // Persist session tokens to localStorage & cookies
+      if (accessToken) {
+        tokenStorage.setTokens(accessToken, refreshToken);
       }
-      if (data.user) {
-        tokenStorage.setUser(data.user);
+      if (user) {
+        tokenStorage.setUser(user);
       }
 
       // Invalidate current user query to trigger fresh fetch
       queryClient.invalidateQueries({ queryKey: AUTH_QUERY_KEYS.currentUser });
 
+      const displayName = user?.name || user?.email;
       toast.success("Login successful!", {
-        description: data.user?.email
-          ? `Welcome back, ${data.user.email}!`
+        description: displayName
+          ? `Welcome back, ${displayName}!`
           : "Welcome back!",
       });
 
-      // Redirect to protected dashboard
-      router.push("/dashboard");
+      // Check if user was previously redirected from a private route
+      let targetUrl = "/dashboard";
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        const redirectParam = params.get("redirect");
+        if (redirectParam && redirectParam.startsWith("/")) {
+          targetUrl = redirectParam;
+        }
+      }
+
+      // Smoothly navigate to dashboard / intended route
+      router.replace(targetUrl);
+      router.refresh();
     },
   });
 };
@@ -90,9 +117,11 @@ export const useLogout = () => {
     try {
       await authService.logout();
     } finally {
+      tokenStorage.clearAuth();
       queryClient.clear();
       toast.success("Logged out successfully");
-      router.push("/login");
+      router.replace("/login");
+      router.refresh();
     }
   };
 };
